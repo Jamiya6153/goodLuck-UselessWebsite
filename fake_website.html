@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fake Website</title>
+    <style>
+        body {
+            background: #F5F5F5;
+            cursor: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            position: relative;
+            margin: 0;
+            overflow: hidden;
+        }
+        /* Fake cursors */
+        .cursor {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: red;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        /* Close buttons */
+        .close-btn {
+            position: absolute;
+            padding: 10px 20px;
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.2s ease-in-out;
+        }
+        .ad-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+        /* Button positions */
+        .btn1 { top: 10px; left: 10px; }
+        .btn2 { top: 10px; right: 10px; }
+        .btn3 { bottom: 10px; left: 10px; }
+        .btn4 { bottom: 10px; right: 10px; }
+
+        /* Video Pop-up */
+        .video-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: black;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 100;
+        }
+        video {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        /* Ad styling */
+        .ad {
+            position: absolute;
+            padding: 20px;
+            background: white;
+            border: 1px solid black;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        /* Test styling */
+        .test-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            text-align: center;
+        }
+        .test-container img {
+            max-width: 100%;
+            height: auto;
+        }
+        .test-container button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .timer {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" loop>
+        <source src="static/sound.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Close buttons -->
+    <button class="close-btn btn1" onclick="openVideo()">Close</button>
+    <button class="close-btn btn2" onclick="showAds()">Close</button>
+    <button class="close-btn btn3" onclick="startTest()">Close</button>
+    <button class="close-btn btn4" onclick="reloadPage()">Close</button>
+
+    <!-- Video Pop-up -->
+    <div class="video-popup" id="videoPopup">
+        <video id="annoyingVideo" controls>
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Test Container -->
+    <div class="test-container" id="testContainer">
+        <div class="timer" id="timer">10</div>
+        <img id="testImage" src="" alt="Test Question">
+        <div id="options"></div>
+    </div>
+
+    <div id="cursors"></div>
+    <div id="ads-container"></div>
+    <script>
+        let adsClosed = 0;
+        let buttonsClosed = 0;
+        const totalButtons = 4; // Total number of buttons (btn1, btn2, btn3, btn4)
+        const totalAds = 30; // Total number of ads
+        const backgroundAudio = document.getElementById('backgroundAudio');
+
+        // Start playing background audio when the page loads
+        backgroundAudio.play();
+
+        // Show 30 ads and allow them to be closed
+        function showAds() {
+            const container = document.getElementById('ads-container');
+            for (let i = 0; i < totalAds; i++) {
+                createAd(i);
+            }
+            // Remove the second button after all ads are shown
+            document.querySelector('.btn2').remove();
+            buttonsClosed++; // Increment buttonsClosed since btn2 is removed
+            checkButtonsClosed(); // Check if the first 3 buttons are closed
+        }
+
+        function createAd(index) {
+            const ad = document.createElement('div');
+            ad.classList.add('ad');
+            ad.innerHTML = `<p>Ad ${index + 1}</p>`;
+
+            // Position the ad randomly on the screen
+            ad.style.top = Math.random() * (window.innerHeight - 150) + 'px';
+            ad.style.left = Math.random() * (window.innerWidth - 200) + 'px';
+
+            // Create and add close button for each ad
+            const closeButton = document.createElement('button');
+            closeButton.classList.add('ad-close');
+            closeButton.textContent = 'X';
+            closeButton.onclick = function() {
+                ad.style.display = 'none';
+                adsClosed++;
+                checkAllClosed(); // Check if everything is closed
+            };
+
+            ad.appendChild(closeButton);
+            document.body.appendChild(ad); // Append the ad directly to the body
+        }                      
+        
+        // Add multiple fake cursors
+        const cursorContainer = document.getElementById('cursors');
+        for (let i = 0; i < 5; i++) {
+            let cursor = document.createElement('div');
+            cursor.classList.add('cursor');
+            cursorContainer.appendChild(cursor);
+        }
+
+        document.addEventListener('mousemove', function(event) {
+            let cursors = document.querySelectorAll('.cursor');
+            cursors.forEach((cursor, index) => {
+                let offsetX = (index + 1) * 20;
+                let offsetY = (index + 1) * 20;
+                cursor.style.left = (event.clientX - offsetX) + 'px';
+                cursor.style.top = (event.clientY - offsetY) + 'px';
+            });
+        });
+
+        // Move buttons after 1 second delay
+        setTimeout(function() {
+            document.querySelectorAll('.close-btn').forEach(button => {
+                button.addEventListener('mouseover', function() {
+                    this.style.position = 'absolute';
+                    this.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+                    this.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+                });
+            });
+        }, 1000);
+
+        function reloadPage() {
+            location.reload();
+        }
+
+        function openVideo() {
+            let videoPopup = document.getElementById('videoPopup');
+            let video = document.getElementById('annoyingVideo');
+            videoPopup.style.display = 'block';
+            video.play();
+
+            // Disable skipping
+            video.addEventListener('timeupdate', function() {
+                if (video.currentTime < video.duration - 1) {
+                    video.controls = false;
+                } else {
+                    video.controls = true;
+                }
+            });
+
+            // When video ends, close pop-up and remove the button
+            video.onended = function() {
+                videoPopup.style.display = 'none';
+                document.querySelector('.btn1').remove();
+                buttonsClosed++; // Increment buttonsClosed since btn1 is removed
+                checkButtonsClosed(); // Check if the first 3 buttons are closed
+            };
+        }
+
+        // Check if the first 3 buttons are closed
+        function checkButtonsClosed() {
+            if (buttonsClosed === 3) {
+                // Change the 4th button's function to stop the audio
+                const btn4 = document.querySelector('.btn4');
+                btn4.onclick = function() {
+                    backgroundAudio.pause(); // Stop the audio
+                    console.log('Audio stopped'); // Debugging: Log to console
+                };
+                btn4.textContent = 'Stop Audio'; // Update button text
+            }
+        }
+
+        // Check if all buttons and ads are closed
+        function checkAllClosed() {
+            if (buttonsClosed === totalButtons && adsClosed === totalAds) {
+                backgroundAudio.pause(); // Stop the background audio
+            }
+        }
+
+        // Test logic
+        const testQuestions = [
+{
+    image: "https://i.postimg.cc/nLqrhbvC/temp-Imagekqw-Mbd.avif",
+    answer: "C"
+},
+{
+    image: "https://i.postimg.cc/Y9k94n38/temp-Imagea7s-YG4.avif",
+    answer: "C"
+},
+{
+    image: "https://i.postimg.cc/ydPN0mpK/temp-Image-ZQ5-U8b.avif",
+    answer: "C"
+},
+{
+    image: "https://i.postimg.cc/wBZmKt46/Screen-Shot-2025-03-15-at-4-07-48-PM.png",
+    answer: "D"
+},
+{
+    image: "https://i.postimg.cc/TPpDHj97/Screen-Shot-2025-03-15-at-4-08-04-PM.png",
+    answer: "A"
+},
+{
+    image: "https://i.postimg.cc/L4zZ78tp/Screen-Shot-2025-03-15-at-4-04-15-PM.png",
+    answer: "C"
+},
+{
+    image: "https://i.postimg.cc/zX8R1Y7R/Screen-Shot-2025-03-15-at-4-02-41-PM.png",
+    answer: "D"
+},
+{
+    image: "https://i.postimg.cc/SNdYS111/Screen-Shot-2025-03-15-at-3-54-31-PM.png",
+    answer: "B"
+},
+{
+    image: "https://i.postimg.cc/cCmCJ6ht/Screen-Shot-2025-03-15-at-1-45-20-PM.png",
+    answer: "C"
+},
+{
+    image: "https://i.postimg.cc/nhQxRCmK/Screen-Shot-2025-03-15-at-1-44-35-PM.png",
+    answer: "A"
+},
+{
+    image: "https://i.postimg.cc/R05Bj41k/Screen-Shot-2025-03-15-at-1-39-44-PM.png",
+    answer: "D"
+},
+{
+    image: "https://i.postimg.cc/tT9H4kMD/Screen-Shot-2025-03-15-at-1-38-04-PM.png",
+    answer: "C"
+},
+{
+    image: "https://i.postimg.cc/9M1HRT32/Screen-Shot-2025-03-15-at-1-36-50-PM.png",
+    answer: "B"
+},
+{
+    image: "https://i.postimg.cc/C5QyJgL6/Screen-Shot-2025-03-15-at-1-36-01-PM.png",
+    answer: "A"
+},
+{
+    image: "https://i.postimg.cc/WpWPsM66/Screen-Shot-2025-03-15-at-1-32-56-PM.png",
+    answer: "D"
+},
+{
+    image: "https://i.postimg.cc/0QkLsQzB/Screen-Shot-2025-03-15-at-1-10-50-PM.png",
+    answer: "C"
+}];
+
+        let currentQuestionIndex = 0;
+        let timeLeft = 10;
+        let timerInterval;
+
+        function startTest() {
+            document.getElementById('testContainer').style.display = 'block';
+            document.querySelector('.btn3').remove();
+            buttonsClosed++; // Increment buttonsClosed since btn3 is removed
+            checkButtonsClosed(); // Check if the first 3 buttons are closed
+            loadQuestion();
+            startTimer();
+        }
+
+        function loadQuestion() {
+            const question = testQuestions[currentQuestionIndex];
+            document.getElementById('testImage').src = question.image;
+            const options = ['A', 'B', 'C', 'D'];
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedAnswer) {
+            const question = testQuestions[currentQuestionIndex];
+            if (selectedAnswer === question.answer) {
+                alert('Correct!');
+                currentQuestionIndex++;
+                if (currentQuestionIndex < testQuestions.length) {
+                    loadQuestion();
+                    timeLeft = 10;
+                    document.getElementById('timer').textContent = timeLeft;
+                } else {
+                    endTest();
+                }
+            } else {
+                alert('Wrong! Try again.');
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    endTest();
+                }
+            }, 1000);
+        }
+
+        function endTest() {
+            clearInterval(timerInterval);
+            alert('Time is up!');
+            document.getElementById('testContainer').style.display = 'none';
+            checkAllClosed(); // Check if everything is closed
+        }
+    </script>
+</body>
+</html>
