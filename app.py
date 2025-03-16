@@ -1,5 +1,6 @@
 from flask import Flask, render_template_string
 
+#all the image links will expired in 30 days !!
 app = Flask(__name__)
 
 @app.route('/')
@@ -302,19 +303,70 @@ def fake_website():
 
             // Test logic
             const testQuestions = [
-                {
-                    image: "https://i.postimg.cc/nLqrhbvC/temp-Imagekqw-Mbd.avif",
-                    answer: "C"
-                },
-                {
-                    image: "https://i.postimg.cc/Y9k94n38/temp-Imagea7s-YG4.avif",
-                    answer: "C"
-                },
-                {
-                    image: "https://i.postimg.cc/ydPN0mpK/temp-Image-ZQ5-U8b.avif",
-                    answer: "C"
-                }
-            ];
+    {
+        image: "https://i.postimg.cc/nLqrhbvC/temp-Imagekqw-Mbd.avif",
+        answer: "C"
+    },
+    {
+        image: "https://i.postimg.cc/Y9k94n38/temp-Imagea7s-YG4.avif",
+        answer: "C"
+    },
+    {
+        image: "https://i.postimg.cc/ydPN0mpK/temp-Image-ZQ5-U8b.avif",
+        answer: "C"
+    },
+    {
+        image: "https://i.postimg.cc/wBZmKt46/Screen-Shot-2025-03-15-at-4-07-48-PM.png",
+        answer: "D"
+    },
+    {
+        image: "https://i.postimg.cc/TPpDHj97/Screen-Shot-2025-03-15-at-4-08-04-PM.png",
+        answer: "A"
+    },
+    {
+        image: "https://i.postimg.cc/L4zZ78tp/Screen-Shot-2025-03-15-at-4-04-15-PM.png",
+        answer: "C"
+    },
+    {
+        image: "https://i.postimg.cc/zX8R1Y7R/Screen-Shot-2025-03-15-at-4-02-41-PM.png",
+        answer: "D"
+    },
+    {
+        image: "https://i.postimg.cc/SNdYS111/Screen-Shot-2025-03-15-at-3-54-31-PM.png",
+        answer: "B"
+    },
+    {
+        image: "https://i.postimg.cc/cCmCJ6ht/Screen-Shot-2025-03-15-at-1-45-20-PM.png",
+        answer: "C"
+    },
+    {
+        image: "https://i.postimg.cc/nhQxRCmK/Screen-Shot-2025-03-15-at-1-44-35-PM.png",
+        answer: "A"
+    },
+    {
+        image: "https://i.postimg.cc/R05Bj41k/Screen-Shot-2025-03-15-at-1-39-44-PM.png",
+        answer: "D"
+    },
+    {
+        image: "https://i.postimg.cc/tT9H4kMD/Screen-Shot-2025-03-15-at-1-38-04-PM.png",
+        answer: "C"
+    },
+    {
+        image: "https://i.postimg.cc/9M1HRT32/Screen-Shot-2025-03-15-at-1-36-50-PM.png",
+        answer: "B"
+    },
+    {
+        image: "https://i.postimg.cc/C5QyJgL6/Screen-Shot-2025-03-15-at-1-36-01-PM.png",
+        answer: "A"
+    },
+    {
+        image: "https://i.postimg.cc/WpWPsM66/Screen-Shot-2025-03-15-at-1-32-56-PM.png",
+        answer: "D"
+    },
+    {
+        image: "https://i.postimg.cc/0QkLsQzB/Screen-Shot-2025-03-15-at-1-10-50-PM.png",
+        answer: "C"
+    }];
 
             let currentQuestionIndex = 0;
             let timeLeft = 10;
